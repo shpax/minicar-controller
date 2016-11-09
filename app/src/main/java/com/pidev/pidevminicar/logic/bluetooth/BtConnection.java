@@ -118,7 +118,7 @@ public class BtConnection extends Thread implements ConnectionInterface, OnConne
             while (maintainConnection) {
                 try {
                     bytesCount = inputStream.read(buffer);
-                    if (listener != null) listener.onData(buffer)
+                    if (listener != null) listener.onData(buffer);
                 } catch (IOException e) {
                     e.printStackTrace();
                     break;
