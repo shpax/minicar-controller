@@ -1,4 +1,4 @@
-package com.pidev.pidevminicar.logic;
+package com.pidev.pidevminicar.arduino;
 
 import java.io.InputStream;
 import java.io.OutputStream;

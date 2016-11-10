@@ -1,12 +1,12 @@
-package com.pidev.pidevminicar.logic.bluetooth;
+package com.pidev.pidevminicar.arduino.bluetooth;
 
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
-import com.pidev.pidevminicar.logic.ConnectionInterface;
-import com.pidev.pidevminicar.logic.OnConnectedListener;
-import com.pidev.pidevminicar.logic.OnDataReceivedListener;
+import com.pidev.pidevminicar.arduino.ConnectionInterface;
+import com.pidev.pidevminicar.arduino.OnConnectedListener;
+import com.pidev.pidevminicar.arduino.OnDataReceivedListener;
+import com.pidev.pidevminicar.arduino.common.InputStreamDataListener;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +23,8 @@ public class BtConnection extends Thread implements ConnectionInterface, OnConne
     private BluetoothDevice device;
     private BluetoothSocket socket;
 
+    private InputStreamDataListener connectionListener;
+
     public BtConnection(BluetoothDevice device) {
         this.device = device;
     }
@@ -33,7 +35,9 @@ public class BtConnection extends Thread implements ConnectionInterface, OnConne
             try {
                 socket.connect();
                 if (socket.isConnected()) {
-                    this.onConnected(true, socket.getInputStream(), socket.getOutputStream());
+                    InputStream in = socket.getInputStream();
+                    this.onConnected(true, in, socket.getOutputStream());
+                    connectionListener = new InputStreamDataListener(in, this);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -81,50 +85,13 @@ public class BtConnection extends Thread implements ConnectionInterface, OnConne
     }
 
     @Override
-    public void onData(byte[] data) {
+    public void onData(int bytesCount, byte[] data) {
 
     }
 
     @Override
     public void onConnected(boolean isConnected, InputStream in, OutputStream out) {
 
-    }
-
-    protected class SocketConnectionListener extends Thread {
-
-        private InputStream inputStream;
-        private boolean maintainConnection;
-        private OnDataReceivedListener listener;
-
-        public SocketConnectionListener(InputStream inputStream) {
-            this.inputStream = inputStream;
-            maintainConnection = true;
-        }
-
-        public SocketConnectionListener(InputStream inputStream, OnDataReceivedListener listener) {
-            this(inputStream);
-            setOnDataReceivedListener(listener);
-        }
-
-        public void setOnDataReceivedListener(OnDataReceivedListener listener) {
-            this.listener = listener;
-        }
-
-        @Override
-        public void run() {
-            byte[] buffer = new byte[1024];
-            int bytesCount;
-
-            while (maintainConnection) {
-                try {
-                    bytesCount = inputStream.read(buffer);
-                    if (listener != null) listener.onData(buffer);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    break;
-                }
-            }
-        }
     }
 
 }

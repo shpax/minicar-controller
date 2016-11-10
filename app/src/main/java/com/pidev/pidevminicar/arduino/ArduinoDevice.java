@@ -1,4 +1,4 @@
-package com.pidev.pidevminicar.logic;
+package com.pidev.pidevminicar.arduino;
 
 import java.util.ArrayList;
 
@@ -31,9 +31,9 @@ public class ArduinoDevice implements OnDataReceivedListener{
     }
 
     @Override
-    public void onData(byte[] data) {
+    public void onData(int bytesCount, byte[] data) {
         for (OnDataReceivedListener listener : onDataReceivedListeners) {
-            listener.onData(data);
+            listener.onData(bytesCount, data);
         }
     }
 }
