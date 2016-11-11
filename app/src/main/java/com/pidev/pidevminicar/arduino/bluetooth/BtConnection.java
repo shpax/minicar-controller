@@ -3,9 +3,9 @@ package com.pidev.pidevminicar.arduino.bluetooth;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
-import com.pidev.pidevminicar.arduino.ConnectionInterface;
-import com.pidev.pidevminicar.arduino.OnConnectedListener;
-import com.pidev.pidevminicar.arduino.OnDataReceivedListener;
+import com.pidev.pidevminicar.arduino.common.ConnectionInterface;
+import com.pidev.pidevminicar.arduino.common.OnConnectedListener;
+import com.pidev.pidevminicar.arduino.common.OnDataReceivedListener;
 import com.pidev.pidevminicar.arduino.common.InputStreamDataListener;
 
 import java.io.IOException;

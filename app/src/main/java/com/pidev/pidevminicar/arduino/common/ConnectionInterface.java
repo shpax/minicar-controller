@@ -1,4 +1,4 @@
-package com.pidev.pidevminicar.arduino;
+package com.pidev.pidevminicar.arduino.common;
 
 /**
  * Created by max on 08.11.16.

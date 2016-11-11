@@ -1,7 +1,5 @@
 package com.pidev.pidevminicar.arduino.common;
 
-import com.pidev.pidevminicar.arduino.OnDataReceivedListener;
-
 import java.io.IOException;
 import java.io.InputStream;
 
