@@ -7,6 +7,7 @@ import com.pidev.pidevminicar.arduino.common.ConnectionInterface;
 import com.pidev.pidevminicar.arduino.common.OnConnectedListener;
 import com.pidev.pidevminicar.arduino.common.OnDataReceivedListener;
 import com.pidev.pidevminicar.arduino.common.InputStreamDataListener;
+import com.pidev.pidevminicar.arduino.common.OutputStreamDataSender;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +24,11 @@ public class BtConnection extends Thread implements ConnectionInterface, OnConne
     private BluetoothDevice device;
     private BluetoothSocket socket;
 
-    private InputStreamDataListener connectionListener;
+    private InputStreamDataListener dataListener;
+    private OutputStreamDataSender dataSender;
+
+    private OnConnectedListener onConnectedListener;
+    private OnDataReceivedListener onDataReceivedListener;
 
     public BtConnection(BluetoothDevice device) {
         this.device = device;
@@ -35,9 +40,9 @@ public class BtConnection extends Thread implements ConnectionInterface, OnConne
             try {
                 socket.connect();
                 if (socket.isConnected()) {
-                    InputStream in = socket.getInputStream();
-                    this.onConnected(true, in, socket.getOutputStream());
-                    connectionListener = new InputStreamDataListener(in, this);
+                    dataListener = new InputStreamDataListener(socket.getInputStream(), this);
+                    dataSender = new OutputStreamDataSender(socket.getOutputStream());
+                    this.onConnected(true, dataListener, dataSender);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -71,27 +76,26 @@ public class BtConnection extends Thread implements ConnectionInterface, OnConne
 
     @Override
     public void sendBytes(byte[] data) {
-
+        if (dataSender != null) dataSender.sendData(data);
     }
 
     @Override
     public void setOnDataReceivedListener(OnDataReceivedListener listener) {
-
+        onDataReceivedListener = listener;
     }
 
     @Override
     public void setOnConnectedListener(OnConnectedListener listener) {
-
+        onConnectedListener = listener;
     }
 
     @Override
     public void onData(int bytesCount, byte[] data) {
-
+        if (onDataReceivedListener != null) onDataReceivedListener.onData(bytesCount, data);
     }
 
     @Override
-    public void onConnected(boolean isConnected, InputStream in, OutputStream out) {
-
+    public void onConnected(boolean isConnected, InputStreamDataListener in, OutputStreamDataSender out) {
+        if (onConnectedListener != null) onConnectedListener.onConnected(isConnected, in, out);
     }
-
 }

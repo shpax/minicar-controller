@@ -8,5 +8,5 @@ import java.io.OutputStream;
  */
 public interface OnConnectedListener {
 
-    void onConnected(boolean isConnected, InputStream in, OutputStream out);
+    void onConnected(boolean isConnected, InputStreamDataListener in, OutputStreamDataSender out);
 }

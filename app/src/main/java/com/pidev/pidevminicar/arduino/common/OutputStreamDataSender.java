@@ -1,5 +1,6 @@
 package com.pidev.pidevminicar.arduino.common;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 /**
@@ -18,6 +19,15 @@ public class OutputStreamDataSender extends Thread {
 
     public void close() {
         this.maintainConnection = false;
+    }
+
+    public void sendData(byte[] data) {
+        try {
+            outputStream.write(data);
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
